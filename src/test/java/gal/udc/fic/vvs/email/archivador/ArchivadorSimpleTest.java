@@ -23,6 +23,9 @@ public class ArchivadorSimpleTest {
 	public static final int espacioVacioTest = 0;
 	public static final int espacioUnicoTest = 1;
 	
+///////////////////////////////////// TESTS //////////////////////////////////////////	
+	
+	
 	
 	// Comprobamos que o constructor non devolva nulo
 	@Test
