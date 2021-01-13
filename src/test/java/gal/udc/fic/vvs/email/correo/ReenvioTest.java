@@ -46,21 +46,5 @@ public class ReenvioTest {
 		assertEquals(tamañoEsperado, reenvio.obtenerTamaño());
 		
 	}
-	
-	// Comprobamos que obtenerVisualización devuelva la visualización más el String
-	//		"\n\n---- Correo reenviado ----\n\n"
-	@Test
-	public void reenvioObtenerVisualizacion() {
-		
-		Reenvio reenvio = new Reenvio(MENSAJE1, MENSAJE2);
-		
-		String visualizacionEsperada = MENSAJE1.obtenerVisualizacion() +
-				"\n\n---- Correo reenviado ----\n\n";
-		
-		assertEquals(visualizacionEsperada, reenvio.obtenerVisualizacion());
-		
-	}
-	
-	
 
 }
