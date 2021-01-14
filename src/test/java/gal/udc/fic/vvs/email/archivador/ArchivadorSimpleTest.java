@@ -6,6 +6,15 @@ import static org.junit.Assert.assertTrue;
 import java.util.Vector;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.pholser.junit.quickcheck.Property;
+import com.pholser.junit.quickcheck.runner.JUnitQuickcheck;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.lessThan;
+
+import static org.junit.Assume.assumeThat;
+
 
 import gal.udc.fic.vvs.email.archivo.Texto;
 import gal.udc.fic.vvs.email.correo.Correo;
@@ -13,6 +22,7 @@ import gal.udc.fic.vvs.email.correo.Mensaje;
 
 
 // Test para archivador simple
+@RunWith(JUnitQuickcheck.class)
 public class ArchivadorSimpleTest {
 	
 	// Declaramos constantes para usar en los tests
@@ -86,16 +96,15 @@ public class ArchivadorSimpleTest {
 	
 	// Comprobamos que o método obtenerNombre devolve correctamente o
 	// nome do archivador pasado por parámetros ao constructor
-	@Test
-	public void archivadorSimpleObtenerNombreTest() {
+	@Property
+	public void obtenerNombre_PBTTest(String nombre, int espacio) {
 		
-		ArchivadorSimple archivador = 
-				new ArchivadorSimple(nombreArchivadorTest, 
-						espacioTest);	
+		assumeThat(espacio, greaterThan(-1));
 		
-		String nombreObj = archivador.obtenerNombre();
+		ArchivadorSimple archivadorSimple = new ArchivadorSimple(nombre, espacio);
 		
-	    assertEquals(nombreArchivadorTest, nombreObj);
+		assertEquals(nombre, archivadorSimple.obtenerNombre());
+		
 	}
 	
 	// Test que comprueba que co espacio dispoñible suficiente
@@ -116,22 +125,40 @@ public class ArchivadorSimpleTest {
     }	
 	
 	
-	// Test que comprueba que sin espacio dispoñible suficiente
-	//   o método devolve false
-	@Test
-    public void almacenarCorreoSinSuficienteEspacioDevuelveTrueTest() {
+	// Almacenar Correo con suficiente espacio Test
+	@Property
+	public void almacenarCorreoConEspacioPBTTest(String nombreArchivador, int espacio, String nombreTexto, String contenido) {
+		
+		assumeThat(espacio, greaterThan(-1));
+		assumeThat(espacio, greaterThan(contenido.length()));
 		
 		ArchivadorSimple archivador = new ArchivadorSimple(
-				nombreArchivadorTest, espacioVacioTest);	
+				nombreArchivador, espacio);	
 		
-		// Creamos el Correo para almacenar
-		Texto texto = new Texto("nombre","contenido");
-		Correo mensaje = new Mensaje(texto);
+		Texto texto = new Texto(nombreTexto, contenido);
+		Correo correo = new Mensaje(texto);
 		
-		boolean insertado = archivador.almacenarCorreo(mensaje);
-
-        assertEquals(false , insertado);
-    }		
+		assertEquals(true, archivador.almacenarCorreo(correo));
+		
+	}
+	
+	// Almacenar Correo sin suficiente espacio Test
+	@Property
+	public void almacenarCorreoSinEspacioPBTTest(String nombreArchivador, int espacio, String nombreTexto, String contenido) {
+		
+		assumeThat(espacio, greaterThan(-1));
+		assumeThat(espacio, lessThan(contenido.length()));
+		
+		ArchivadorSimple archivador = new ArchivadorSimple(
+				nombreArchivador, espacio);	
+		
+		Texto texto = new Texto(nombreTexto, contenido);
+		Correo correo = new Mensaje(texto);
+		
+		assertEquals(false, archivador.almacenarCorreo(correo));
+		
+	}
+		
 	
 	// Test que comprueba que cun só espacio dispoñible suficiente
 	//   o método devolve true a primeira vez lanzado
