@@ -9,9 +9,14 @@ import java.util.Collection;
 import java.util.Vector;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import com.pholser.junit.quickcheck.Property;
+import com.pholser.junit.quickcheck.runner.JUnitQuickcheck;
 
 import gal.udc.fic.vvs.email.archivo.Texto;
 
+@RunWith(JUnitQuickcheck.class)
 public class MensajeTest {
 	
 	public static final Texto TEXTO = new Texto("nombre","contenido");
@@ -106,12 +111,13 @@ public class MensajeTest {
 	
 	// Comprobar obtenerTamaño, que coincida con el tamaño del texto del
 	//	mensaje
-	@Test
-	public void obtenerTamaño() {
+	@Property
+	public void obtenerTamaño( String nombreTexto, String contenido) {
 		
-		Mensaje mensaje = new Mensaje(TEXTO);
+		Texto texto = new Texto(nombreTexto, contenido);
+		Mensaje mensaje = new Mensaje(texto);
 		
-		assertEquals(TEXTO.obtenerTamaño(), mensaje.obtenerTamaño());
+		assertEquals(texto.obtenerTamaño(), mensaje.obtenerTamaño());
 		
 	}
 	
